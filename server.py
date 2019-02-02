@@ -7,13 +7,14 @@ from urllib.request import urlopen as uReq
 from multiprocessing import Pool
 import indicoio
 from summa import summarizer
+import requests
+
 
 indicoio.config.api_key = '10b9bc05e39205de419a80cc3263ea3c'
 
 f = open("apikey.txt", "r")
 APIKeystring = f.read()
 APIKey = APIKeystring[10:len(APIKeystring)-1]
-import requests
 
 app = Flask(__name__)
 CORS(app)
@@ -40,10 +41,11 @@ def expand():
 
     return jsonify(result)
 
-def searchFunction(query, APIKey = APIKey):
-
+def searchFunction(query, APIKey, num):
+    if num > 10: num = 10
+    if num < 1: num = 1
     try:
-        content = requests.get("https://www.googleapis.com/customsearch/v1?key="+APIKey+"&cx=004968834634498115028:9rcxpfpfjsc&q="+query+"\"")
+        content = requests.get("https://www.googleapis.com/customsearch/v1?key="+APIKey+"&cx=004968834634498115028:9rcxpfpfjsc&q="+query+"&num="+str(num))
         unpacked = content.json()
         results = unpacked["items"]
         resultList = []
@@ -61,25 +63,14 @@ def searchFunction(query, APIKey = APIKey):
             except KeyError:
                 continue
         return urlList
-
     except ValueError:
         print("error generating search")
 
-def async_search(url, length=3):
-    print(url)
-    print(getWords(url))
-    return Summerize(getWords(url), length)
-
 
 def getWords(url):
-    my_url = url
-    uClient= uReq(my_url)
-    page_html=uClient.read()
-    uClient.close()
-
-    page_soup = Soup(page_html, "html.parser")
-    paragraphs= page_soup.findAll('p')
-
+    page_html = requests.get(url)
+    page_soup = Soup(page_html.text, "html.parser")
+    paragraphs = page_soup.findAll('p')
     data = ""
     text = []
     text.append(" ")
@@ -91,23 +82,17 @@ def getWords(url):
             if text[len(text)-1] == "\n" or text[len(text)-1] == "None":
                 text.pop()
 
-
             data = data + " " + text[len(text)-1]
-
-
     return data
-
-
-def SummerizeWebsite(url):
-    string= indicoio.summarization(url)
-    print(type(string))
 
 
 def SummerizeText(text):
     t = summarizer.summarize(text)
-    t.strip("[.*]")
-    print(t)
+    t = re.sub(r'\[.*?\]','', t)
+    t = t.strip('\n')
+    t = t.strip('\t')
     return t
+
 
 if __name__ == '__main__':
    app.run(debug = True)

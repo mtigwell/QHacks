@@ -22,7 +22,6 @@ def searchFunction(query, APIKey, num):
             except KeyError:
                 continue
         return urlList
-
     except ValueError:
         print("error generating search")
 
