@@ -34,8 +34,9 @@ def searchAPI():
 def gen_essay():
     search_term = request.args.get('search')
     num_results = int(request.args.get('results'))
-    print(search_term, num_results)
-    result = generateEssay(search_term, num_results)
+    count = int(request.args.get('count'))
+    print(search_term, num_results, count)
+    result = generateEssay(search_term, num_results, count)
     return jsonify([{'summary': result, 'url': "Essay"}])
 
 # API for expanding summary
@@ -52,7 +53,7 @@ def expand():
 
     return jsonify(result)
 
-def searchFunction(query, num, startIndex):
+def searchFunction(query, num, startIndex = 1):
     if num > 10: num = 10
     if num < 1: num = 1
     try:
@@ -107,7 +108,7 @@ def SummerizeText(text, word=200):
     return t
 
 
-def generateEssay(query, number=10):
+def generateEssay(query, number=10, word_count=None):
     result = searchFunction(query, number)
     text = ""
     for website in result:
@@ -116,7 +117,7 @@ def generateEssay(query, number=10):
         except TypeError:
             continue
     if text is not None:
-        finalessay = SummerizeText(text, None)
+        finalessay = SummerizeText(text, word_count)
         print(finalessay)
     else:
         print("YA FUCKED IT")
@@ -140,7 +141,7 @@ def generateArticles(query, number):
                 print("Skipped:" + website)
                 continue
         startIndex += 10
-    return textList
+    return textList[:number]
 
 
 if __name__ == '__main__':

@@ -27,13 +27,14 @@ export class SearchService {
 
   }
 
-  genEssay(search: string, amount: number): Observable<SearchResult[]> {
+  genEssay(search: string, amount: number, count: number): Observable<SearchResult[]> {
     var test;
     
     const params = new HttpParams({
       fromObject: {
         search: search,
         results: String(amount),
+        count: String(count),
       }
     });
     

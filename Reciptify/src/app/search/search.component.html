@@ -9,6 +9,9 @@
       <mat-error *ngIf="this.form.get('resultNum').invalid">Required</mat-error>
     </mat-form-field>
     <button style="margin-left: 3%" mat-raised-button class="submit-btn"  mat-raised-button type="submit" color="primary" [disabled]="!form.valid">Search Articles</button>
+    <mat-form-field style="width: 20%; margin-left: 3%">
+      <input matInput placeholder="Essay Word Count" formControlName="essayCount" type="number" min="200">
+    </mat-form-field>
     <button (click)="essay=true" style="margin-left: 3%" class="submit-btn"  mat-raised-button mat-raised-button  type="submit"  color="primary" [disabled]="!form.valid">Generate Essay</button>
   </form>
   <button mat-raised-button class="download" (click)="saveFile()" [disabled]="searchResults.length == 0" style="margin-bottom: 5px"> Download </button>

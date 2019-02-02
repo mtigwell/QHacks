@@ -24,6 +24,7 @@ export class SearchComponent implements OnInit {
     this.form = this.formBuilder.group({
       search: [null, [Validators.required]],
       resultNum: [5, Validators.required],
+      essayCount: [null, null]
     });
   }
   search() {
@@ -51,9 +52,10 @@ export class SearchComponent implements OnInit {
     var search = this.form.controls['search'];
     this.search_name = search.value;
     var numResult =  this.form.controls['resultNum'];
+    var essayCount =  this.form.controls['essayCount'];
     if (search.valid && numResult.valid){
       console.log("GENERATING.......");
-      this.searchService.genEssay(search.value, numResult.value)
+      this.searchService.genEssay(search.value, numResult.value, essayCount.value)
         .subscribe(result => {
           console.log(result);
           this.searchResults = result}
