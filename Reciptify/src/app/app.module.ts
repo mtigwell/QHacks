@@ -7,6 +7,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { MainComponent } from './main/main.component';
 import { SearchComponent } from './search/search.component';
+import { HttpClientModule } from '@angular/common/http'; 
 
 import {
   MatAutocompleteModule,
@@ -97,6 +98,7 @@ export class DemoMaterialModule {}
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     DemoMaterialModule,
     BrowserAnimationsModule,
     FormsModule,

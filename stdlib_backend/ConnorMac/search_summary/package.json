@@ -1,0 +1,20 @@
+{
+  "name": "search_summary",
+  "version": "0.0.0",
+  "description": "",
+  "author": "ConnorMac <connor@bkmac.ca>",
+  "main": "functions/__main__.js",
+  "dependencies": {
+    
+  },
+  "private": true,
+  "stdlib": {
+    "build": "faaslang",
+    "name": "ConnorMac/search_summary",
+    "timeout": 10000,
+    "personalize": {
+      "keys": [],
+      "user": []
+    }
+  }
+}

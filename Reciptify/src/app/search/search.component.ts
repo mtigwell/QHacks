@@ -29,8 +29,11 @@ export class SearchComponent implements OnInit {
     if (search.valid && numResult.valid){
       console.log("SEARCHING.......");
       this.searchService.getSearchResults(search.value, numResult.value)
-        .subscribe(result => this.searchResults = result);
-        
+        .subscribe(result => {
+          console.log(result);
+          
+          this.searchResults = result}
+          );
     }
   }
 
@@ -39,7 +42,7 @@ export class SearchComponent implements OnInit {
     var index = this.searchResults.indexOf(result);
     this.searchService.expandSearch(result)
         .subscribe(responce => {
-          this.searchResults[index] = responce;
+          this.searchResults[index].summary = responce;
         });
   }
 }
