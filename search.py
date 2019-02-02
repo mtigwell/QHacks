@@ -1,8 +1,11 @@
 import requests
 
-def searchFunction(query, APIKey):
+def searchFunction(query, APIKey, num):
+    if num > 10: num = 10
+    if num < 1: num = 1
     try:
-        content = requests.get("https://www.googleapis.com/customsearch/v1?key="+APIKey+"&cx=004968834634498115028:9rcxpfpfjsc&q="+query+"\"")
+        # content = requests.get("https://www.googleapis.com/customsearch/v1?key="+APIKey+"&cx=004968834634498115028:9rcxpfpfjsc&q="+query+"\"")
+        content = requests.get("https://www.googleapis.com/customsearch/v1?key="+APIKey+"&cx=004968834634498115028:9rcxpfpfjsc&q="+query+"&num="+str(num))
         unpacked = content.json()
         results = unpacked["items"]
         resultList = []
@@ -29,5 +32,4 @@ f = open("apikey.txt", "r")
 APIKeystring = f.read()
 APIKey = APIKeystring[10:len(APIKeystring)-1]
 query = "usain bolt"
-result = searchFunction(query, APIKey)
-
+result = searchFunction(query, APIKey, 10)
