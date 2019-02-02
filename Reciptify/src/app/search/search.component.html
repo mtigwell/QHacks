@@ -1,0 +1,30 @@
+<mat-card>
+  <form [formGroup]="form" (ngSubmit)="search()">
+    <mat-form-field style="width: 60%; margin-left: 3%">
+      <input matInput placeholder="Search" formControlName="search" required>
+      <mat-error *ngIf="this.form.get('search').invalid">Required</mat-error>
+    </mat-form-field>
+    <mat-form-field style="width: 15%; margin-left: 3%">
+      <input matInput placeholder="# of Results" formControlName="resultNum" type="number" min="1" max="20" required>
+      <mat-error *ngIf="this.form.get('resultNum').invalid">Required</mat-error>
+    </mat-form-field>
+    <button style="margin-left: 3%" mat-raised-button class="submit-btn"  mat-raised-button type="submit" color="primary" [disabled]="!form.valid">Search</button>
+  </form>
+</mat-card>
+
+<div *ngFor="let result of searchResults">
+  <mat-card>
+      <mat-card-title>
+        {{result.url}}
+      </mat-card-title>
+    <mat-card-content>
+      {{result.summary}}
+    </mat-card-content>
+    <mat-card-actions>
+      <div *ngIf="!result.expanded">
+        <button mat-button (click)="expandResult(result)">Expand</button>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
