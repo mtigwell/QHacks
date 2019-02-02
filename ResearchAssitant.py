@@ -1,13 +1,8 @@
 from bs4 import BeautifulSoup as Soup
 from urllib.request import urlopen as uReq
+import indicoio
 
-
-
-
-# for i in len(text[len(text) - 1][:]):
-#     if ord((text[len(text) - 1][i]) > 126 or ord(text[len(text) - 1][i]) < 32:
-#         text.pop()
-#     break
+indicoio.config.api_key = '10b9bc05e39205de419a80cc3263ea3c'
 
 
 def getWords(url):
@@ -33,22 +28,17 @@ def getWords(url):
 
             data = data + " " + text[len(text)-1]
 
-    print(text)
-    return data
+
+    return data, text
 
 
+def Summerize(url):
+    string= indicoio.summarization(url)
+    print(type(string))
 
-url = 'https://www.history.com/topics/ancient-history/alexander-the-great'
-url = "http://www.bbc.co.uk/history/historic_figures/alexander_the_great.shtml"
-url = 'https://en.wikipedia.org/wiki/Alexander_the_Great'
-url = 'https://www.ancient.eu/Alexander_the_Great/'
-url = "https://en.wikipedia.org/wiki/American_Revolutionary_War"
-url= "https://www.history.com/topics/american-revolution/american-revolution-history"
+    return string
 
-string = getWords(url)
-print()
-print(string)
-print()
+
 
 
 
