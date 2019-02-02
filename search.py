@@ -1,7 +1,6 @@
 import requests
 
 def searchFunction(query, APIKey):
-
     try:
         content = requests.get("https://www.googleapis.com/customsearch/v1?key="+APIKey+"&cx=004968834634498115028:9rcxpfpfjsc&q="+query+"\"")
         unpacked = content.json()
@@ -31,3 +30,4 @@ APIKeystring = f.read()
 APIKey = APIKeystring[10:len(APIKeystring)-1]
 query = "usain bolt"
 result = searchFunction(query, APIKey)
+
