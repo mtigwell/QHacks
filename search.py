@@ -20,8 +20,3 @@ def searchFunction(query):
 
     except ValueError:
         print("error generating search")
-
-
-query = "usain bolt"
-result = searchFunction(query)
-

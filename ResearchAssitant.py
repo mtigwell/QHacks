@@ -32,9 +32,8 @@ def getWords(url):
     return data, text
 
 
-def Summerize(url):
-    string= indicoio.summarization(url)
-    print(type(string))
+def Summerize(url, length):
+    string = indicoio.summarization(url, top_n=length)
 
     return string
 
