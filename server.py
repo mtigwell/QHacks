@@ -8,6 +8,10 @@ from multiprocessing import Pool
 import indicoio
 
 indicoio.config.api_key = '10b9bc05e39205de419a80cc3263ea3c'
+
+f = open("apikey.txt", "r")
+APIKeystring = f.read()
+APIKey = APIKeystring[10:len(APIKeystring)-1]
 import requests
 
 app = Flask(__name__)
@@ -35,8 +39,8 @@ def expand():
 
     return jsonify(result)
 
-def searchFunction(query):
-    APIKey = "AIzaSyDTrlyiRXmiYbCUrTztuEGySCFJG66aU1I"
+def searchFunction(query, APIKey = APIKey):
+
     try:
         content = requests.get("https://www.googleapis.com/customsearch/v1?key="+APIKey+"&cx=004968834634498115028:9rcxpfpfjsc&q="+query+"\"")
         unpacked = content.json()
@@ -49,8 +53,12 @@ def searchFunction(query):
             except KeyError:
                 continue
         for result in resultList:
-            if result['og:url'][0] == 'h':
-                urlList.append(result['og:url'])
+            try:
+                result['og:url'][0]
+                if result['og:url'][0] == 'h':
+                    urlList.append(result['og:url'])
+            except KeyError:
+                continue
         return urlList
 
     except ValueError:
