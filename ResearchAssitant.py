@@ -5,7 +5,6 @@ from summa import summarizer
 
 indicoio.config.api_key = '10b9bc05e39205de419a80cc3263ea3c'
 
-
 def getWords(url):
     my_url = url
     uClient= uReq(my_url)
@@ -37,8 +36,6 @@ def SummerizeWebsite(url):
     string= indicoio.summarization(url)
     print(type(string))
 
-    return string
-
 
 def SummerizeText(text):
     t = summarizer.summarize(text)
@@ -52,10 +49,4 @@ word = getWords(url)
 SummerizeText(word)
 word = SummerizeWebsite(url)
 print(word)
-
-
-
-
-
-
 
