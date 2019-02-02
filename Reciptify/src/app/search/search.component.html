@@ -11,6 +11,7 @@
     <button style="margin-left: 3%" mat-raised-button class="submit-btn"  mat-raised-button type="submit" color="primary" [disabled]="!form.valid">Search Articles</button>
     <button (click)="essay=true" style="margin-left: 3%" class="submit-btn"  mat-raised-button mat-raised-button  type="submit"  color="primary" [disabled]="!form.valid">Generate Essay</button>
   </form>
+  <button mat-raised-button class="download" (click)="saveFile()" [disabled]="searchResults.length == 0" style="margin-bottom: 5px"> Download </button>
 </mat-card>
   
 <div *ngFor="let result of searchResults">
@@ -29,4 +30,3 @@
   </mat-card>
 </div>
 
-<button mat-fab class="download" (click)="saveFile()"> DOWN </button>

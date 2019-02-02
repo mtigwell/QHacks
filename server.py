@@ -102,6 +102,7 @@ def getWords(url):
 def SummerizeText(text, word=200):
     t = summarizer.summarize(text, words=word)
     t = re.sub(r'\[.*?\]','', t)
+    t = re.sub(r'\<.*?\>','', t)
     t = re.sub(r'\s ','',t)
     return t
 
@@ -115,7 +116,7 @@ def generateEssay(query, number=10):
         except TypeError:
             continue
     if text is not None:
-        finalessay = SummerizeText(text)
+        finalessay = SummerizeText(text, None)
         print(finalessay)
     else:
         print("YA FUCKED IT")
