@@ -52,11 +52,11 @@ def expand():
 
     return jsonify(result)
 
-def searchFunction(query, num):
+def searchFunction(query, num, startIndex):
     if num > 10: num = 10
     if num < 1: num = 1
     try:
-        content = requests.get("https://www.googleapis.com/customsearch/v1?key="+APIKey+"&cx=004968834634498115028:9rcxpfpfjsc&q="+str(query)+"&num="+str(num))
+        content = requests.get("https://www.googleapis.com/customsearch/v1?key="+APIKey+"&cx=004968834634498115028:9rcxpfpfjsc&q="+query+"&num="+str(num)+"&start="+str(startIndex))
         unpacked = content.json()
         results = unpacked["items"]
         resultList = []
@@ -123,23 +123,26 @@ def generateEssay(query, number=10):
     return finalessay
 
 
-def generateArticles(query, number = 10):
-    
-    textList = []
+def generateArticles(query, number):
 
-    result = searchFunction(query, number)
-    for website in result:
-        try:
-            text = getWords(website)
-            if text is not None:
-                summaray = SummerizeText(text)
-                if summaray is not None:
-                    textList.append({'summary': summaray, 'url': website})
-        except TypeError:
-            print("Skipped:" + website)
-            continue
+    textList = []
+    startIndex = 1
+    while len(textList) < number:
+        result = searchFunction(query, number, startIndex)
+        for website in result:
+            try:
+                text = getWords(website)
+                if text is not None:
+                    summary = SummerizeText(text)
+                    if summary is not None:
+                        textList.append({'summary': summary, 'url': website})
+            except TypeError:
+                print("Skipped:" + website)
+                continue
+        startIndex += 10
     return textList
 
 
 if __name__ == '__main__':
-   app.run(debug = True)
+    app.run(debug=True)
+
