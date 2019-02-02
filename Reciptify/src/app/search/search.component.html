@@ -8,10 +8,11 @@
       <input matInput placeholder="# of Results" formControlName="resultNum" type="number" min="1" max="20" required>
       <mat-error *ngIf="this.form.get('resultNum').invalid">Required</mat-error>
     </mat-form-field>
-    <button style="margin-left: 3%" mat-raised-button class="submit-btn"  mat-raised-button type="submit" color="primary" [disabled]="!form.valid">Search</button>
+    <button style="margin-left: 3%" mat-raised-button class="submit-btn"  mat-raised-button type="submit" color="primary" [disabled]="!form.valid">Search Articles</button>
+    <button style="margin-left: 3%" mat-raised-button class="submit-btn"  mat-raised-button type="submit" color="primary" [disabled]="!form.valid">Generate Essay</button>
   </form>
 </mat-card>
-
+  
 <div *ngFor="let result of searchResults">
   <mat-card>
       <mat-card-title>
@@ -28,3 +29,4 @@
   </mat-card>
 </div>
 
+<button mat-fab class="download" (click)="saveFile"> DOWN </button>

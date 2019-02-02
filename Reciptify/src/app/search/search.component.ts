@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { _localeFactory } from '@angular/core/src/application_module';
-import { SearchService } from '../search.service'
+import { SearchService } from '../search.service';
+import { saveAs } from "file-saver";
 
 @Component({
   selector: 'app-search',
@@ -14,6 +15,7 @@ export class SearchComponent implements OnInit {
 
   form: FormGroup;
   searchResults: SearchResult[] = [];
+  search_name: string;
   
   constructor(private formBuilder: FormBuilder, private searchService: SearchService) { }
 
@@ -25,6 +27,7 @@ export class SearchComponent implements OnInit {
   }
   search() {
     var search = this.form.controls['search'];
+    this.search_name = search.value;
     var numResult =  this.form.controls['resultNum'];
     if (search.valid && numResult.valid){
       console.log("SEARCHING.......");
@@ -44,6 +47,16 @@ export class SearchComponent implements OnInit {
         .subscribe(responce => {
           this.searchResults[index].summary = responce;
         });
+  }
+
+  saveFile(){
+    let summary_file : string[] = []
+    this.searchResults.forEach(element => {
+      summary_file.push("URL:" + element.url + "\n");
+      summary_file.push("Summary:\n" + element.summary + "\n");
+    })
+    let blob = new Blob(summary_file, {type: "text/plain;charset=utf-8"});
+    saveAs(blob, this.search_name + "_summary.txt");
   }
 }
 
