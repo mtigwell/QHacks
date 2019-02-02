@@ -27,6 +27,8 @@ def generateArticles(query):
     APIKey = APIKeystring[10:len(APIKeystring) - 1]
     query = "alexander the great"
     result = search.searchFunction(query, APIKey, 10)
+
+
     textList = []
     for website in result:
         try:
@@ -36,6 +38,5 @@ def generateArticles(query):
         except TypeError:
             continue
     return textList
-
 
 
