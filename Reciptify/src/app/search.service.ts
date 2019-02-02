@@ -27,6 +27,21 @@ export class SearchService {
 
   }
 
+  genEssay(search: string, amount: number): Observable<SearchResult[]> {
+    var test;
+    
+    const params = new HttpParams({
+      fromObject: {
+        search: search,
+        results: String(amount),
+      }
+    });
+    
+    return this.httpClient.get<SearchResult[]>('http://127.0.0.1:5000/essay', { params: params })
+
+  }
+
+
   expandSearch(result: SearchResult): Observable<string> {
     const params = new HttpParams({
       fromObject: {

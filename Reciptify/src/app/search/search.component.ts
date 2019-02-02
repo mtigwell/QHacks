@@ -16,6 +16,7 @@ export class SearchComponent implements OnInit {
   form: FormGroup;
   searchResults: SearchResult[] = [];
   search_name: string;
+  essay: boolean; 
   
   constructor(private formBuilder: FormBuilder, private searchService: SearchService) { }
 
@@ -26,6 +27,11 @@ export class SearchComponent implements OnInit {
     });
   }
   search() {
+    if(this.essay){
+      this.essay = false;
+      this.genEssay()
+    }
+    else {
     var search = this.form.controls['search'];
     this.search_name = search.value;
     var numResult =  this.form.controls['resultNum'];
@@ -35,6 +41,21 @@ export class SearchComponent implements OnInit {
         .subscribe(result => {
           console.log(result);
           
+          this.searchResults = result}
+          );
+    }
+  }
+  }
+
+  genEssay() {
+    var search = this.form.controls['search'];
+    this.search_name = search.value;
+    var numResult =  this.form.controls['resultNum'];
+    if (search.valid && numResult.valid){
+      console.log("GENERATING.......");
+      this.searchService.genEssay(search.value, numResult.value)
+        .subscribe(result => {
+          console.log(result);
           this.searchResults = result}
           );
     }
@@ -50,13 +71,15 @@ export class SearchComponent implements OnInit {
   }
 
   saveFile(){
+    console.log('DOWNLOADING.......');
+    
     let summary_file : string[] = []
     this.searchResults.forEach(element => {
       summary_file.push("URL:" + element.url + "\n");
       summary_file.push("Summary:\n" + element.summary + "\n");
     })
     let blob = new Blob(summary_file, {type: "text/plain;charset=utf-8"});
-    saveAs(blob, this.search_name + "_summary.txt");
+    saveAs(blob, this.search_name + "_summary.doc");
   }
 }
 

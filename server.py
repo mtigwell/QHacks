@@ -8,13 +8,15 @@ from multiprocessing import Pool
 import indicoio
 from summa import summarizer
 import requests
+import re
 
 
 indicoio.config.api_key = '10b9bc05e39205de419a80cc3263ea3c'
 
 f = open("apikey.txt", "r")
 APIKeystring = f.read()
-APIKey = APIKeystring[10:len(APIKeystring)-1]
+APIKey = APIKeystring[10:len(APIKeystring) - 1]
+
 
 app = Flask(__name__)
 CORS(app)
@@ -23,29 +25,38 @@ CORS(app)
 @app.route('/search', methods=['GET'])
 def searchAPI():
     search_term = request.args.get('search')
-    num_results = request.args.get('results')
+    num_results = int(request.args.get('results'))
     print(search_term, num_results)
-    urls = searchFunction(search_term)
-    with Pool(10) as p:
-        result = p.map(async_search, urls)
+    result = generateArticles(search_term, num_results)
     return jsonify(result)
+
+@app.route('/essay', methods=['GET'])
+def gen_essay():
+    search_term = request.args.get('search')
+    num_results = int(request.args.get('results'))
+    print(search_term, num_results)
+    result = generateEssay(search_term, num_results)
+    return jsonify([{'summary': result, 'url': "Essay"}])
 
 # API for expanding summary
 @app.route('/expand', methods=['GET'])
 def expand():
     url = request.args.get('url')
     print(url)
+
+    text = getWords(url)
+
     result = {
-        'summary': async_search(url, 8)
+        'summary': SummerizeText(text, 800)
     }
 
     return jsonify(result)
 
-def searchFunction(query, APIKey, num):
+def searchFunction(query, num):
     if num > 10: num = 10
     if num < 1: num = 1
     try:
-        content = requests.get("https://www.googleapis.com/customsearch/v1?key="+APIKey+"&cx=004968834634498115028:9rcxpfpfjsc&q="+query+"&num="+str(num))
+        content = requests.get("https://www.googleapis.com/customsearch/v1?key="+APIKey+"&cx=004968834634498115028:9rcxpfpfjsc&q="+str(query)+"&num="+str(num))
         unpacked = content.json()
         results = unpacked["items"]
         resultList = []
@@ -54,6 +65,7 @@ def searchFunction(query, APIKey, num):
             try:
                 resultList.append(results[i]["pagemap"]["metatags"][0])
             except KeyError:
+                print("Skipped: No Metatags")
                 continue
         for result in resultList:
             try:
@@ -61,6 +73,7 @@ def searchFunction(query, APIKey, num):
                 if result['og:url'][0] == 'h':
                     urlList.append(result['og:url'])
             except KeyError:
+                print("Skipped: No og:url")
                 continue
         return urlList
     except ValueError:
@@ -86,19 +99,15 @@ def getWords(url):
     return data
 
 
-def SummerizeText(text):
-    t = summarizer.summarize(text)
+def SummerizeText(text, word=200):
+    t = summarizer.summarize(text, words=word)
     t = re.sub(r'\[.*?\]','', t)
-    t = t.strip('\n')
-    t = t.strip('\t')
+    t = re.sub(r'\s ','',t)
     return t
 
 
-def generateEssay(filename, query):
-    f = open("apikey.txt", "r")
-    APIKeystring = f.read()
-    APIKey = APIKeystring[10:len(APIKeystring)-1]
-    result = searchFunction(query, APIKey, 10)
+def generateEssay(query, number=10):
+    result = searchFunction(query, number)
     text = ""
     for website in result:
         try:
@@ -110,24 +119,23 @@ def generateEssay(filename, query):
         print(finalessay)
     else:
         print("YA FUCKED IT")
-    f = open(str(filename)+".txt", "w")
-    f.write(finalessay)
-    f.close()
+    return finalessay
 
 
-def generateArticles(query):
-    f = open("apikey.txt", "r")
-    APIKeystring = f.read()
-    APIKey = APIKeystring[10:len(APIKeystring) - 1]
-    query = "alexander the great"
-    result = searchFunction(query, APIKey, 10)
+def generateArticles(query, number = 10):
+    
     textList = []
+
+    result = searchFunction(query, number)
     for website in result:
         try:
             text = getWords(website)
             if text is not None:
-                textList.append(SummerizeText(text))
+                summaray = SummerizeText(text)
+                if summaray is not None:
+                    textList.append({'summary': summaray, 'url': website})
         except TypeError:
+            print("Skipped:" + website)
             continue
     return textList
 
