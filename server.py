@@ -66,6 +66,8 @@ def searchFunction(query, APIKey = APIKey):
         print("error generating search")
 
 def async_search(url, length=3):
+    print(url)
+    print(getWords(url))
     return Summerize(getWords(url), length)
 
 
