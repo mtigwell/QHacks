@@ -23,19 +23,8 @@ export class SearchService {
       }
     });
     
-    return this.httpClient.get('http://127.0.0.1:5000/search', { params: params }).pipe(
-      map(data  => {  
-      let d : any[] =  Array(data)[0];
-      this.res = []
-      for ( let element of d){
-        this.res.push({
-          url: element['url'],
-          summary: element['summary'],
-          expanded: false
-        })
-      }
-      return this.res
-    }))
+    return this.httpClient.get<SearchResult[]>('http://127.0.0.1:5000/search', { params: params })
+
   }
 
   expandSearch(result: SearchResult): Observable<string> {

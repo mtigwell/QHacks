@@ -5,3 +5,10 @@
     margin-left: 5%;
     margin-top: 20px;
 }
+
+.download {
+    position:absolute;
+    bottom:0;
+    right:0;
+    margin: 10px;
+}
