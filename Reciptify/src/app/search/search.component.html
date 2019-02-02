@@ -9,7 +9,7 @@
       <mat-error *ngIf="this.form.get('resultNum').invalid">Required</mat-error>
     </mat-form-field>
     <button style="margin-left: 3%" mat-raised-button class="submit-btn"  mat-raised-button type="submit" color="primary" [disabled]="!form.valid">Search Articles</button>
-    <button style="margin-left: 3%" mat-raised-button class="submit-btn"  mat-raised-button type="submit" color="primary" [disabled]="!form.valid">Generate Essay</button>
+    <button (click)="essay=true" style="margin-left: 3%" class="submit-btn"  mat-raised-button mat-raised-button  type="submit"  color="primary" [disabled]="!form.valid">Generate Essay</button>
   </form>
 </mat-card>
   
@@ -29,4 +29,4 @@
   </mat-card>
 </div>
 
-<button mat-fab class="download" (click)="saveFile"> DOWN </button>
+<button mat-fab class="download" (click)="saveFile()"> DOWN </button>
