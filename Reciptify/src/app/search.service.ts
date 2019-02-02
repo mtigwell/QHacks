@@ -25,7 +25,7 @@ export class SearchService {
     
     return this.httpClient.get('http://127.0.0.1:5000/search', { params: params }).pipe(
       map(data  => {  
-      let d : Array<any> =  Array(data)[0];
+      let d : any[] =  Array(data)[0];
       this.res = []
       for ( let element of d){
         this.res.push({
