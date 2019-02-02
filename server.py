@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup as Soup
 from urllib.request import urlopen as uReq
 from multiprocessing import Pool
 import indicoio
+from summa import summarizer
 
 indicoio.config.api_key = '10b9bc05e39205de419a80cc3263ea3c'
 
@@ -69,6 +70,7 @@ def async_search(url, length=3):
     print(getWords(url))
     return Summerize(getWords(url), length)
 
+
 def getWords(url):
     my_url = url
     uClient= uReq(my_url)
@@ -93,13 +95,19 @@ def getWords(url):
             data = data + " " + text[len(text)-1]
 
 
-    return data, text
+    return data
 
 
-def Summerize(url, length):
-    string = indicoio.summarization(url, top_n=length)
+def SummerizeWebsite(url):
+    string= indicoio.summarization(url)
+    print(type(string))
 
-    return string
+
+def SummerizeText(text):
+    t = summarizer.summarize(text)
+    t.strip("[.*]")
+    print(t)
+    return t
 
 if __name__ == '__main__':
    app.run(debug = True)
