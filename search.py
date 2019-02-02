@@ -14,8 +14,12 @@ def searchFunction(query, APIKey):
             except KeyError:
                 continue
         for result in resultList:
-            if result['og:url'][0] == 'h':
-                urlList.append(result['og:url'])
+            try:
+                result['og:url'][0]
+                if result['og:url'][0] == 'h':
+                    urlList.append(result['og:url'])
+            except KeyError:
+                continue
         return urlList
 
     except ValueError:
