@@ -1,5 +1,6 @@
 import search
 import ResearchAssitant
+import server
 
 def generateEssay(filename, query):
     f = open("apikey.txt", "r")
@@ -26,7 +27,7 @@ def generateArticles(query):
     APIKeystring = f.read()
     APIKey = APIKeystring[10:len(APIKeystring) - 1]
     query = "alexander the great"
-    result = search.searchFunction(query, APIKey, 10)
+    result = search.searchFunction(query, APIKey, 10, 1)
 
 
     textList = []
@@ -40,3 +41,4 @@ def generateArticles(query):
     return textList
 
 
+print(generateArticles("alexander the great"))

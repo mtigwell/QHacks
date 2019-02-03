@@ -117,15 +117,15 @@ def generateEssay(query, number=10, word_count=None):
         except TypeError:
             continue
     if text is not None:
-        finalessay = SummerizeText(text, word_count)
+        essay = SummerizeText(text, word_count)
+        finalessay = removeRedundancy(essay)
         print(finalessay)
     else:
-        print("YA FUCKED IT")
+        print("Error Occurred")
     return finalessay
 
 
 def generateArticles(query, number):
-
     textList = []
     startIndex = 1
     while len(textList) < number:
@@ -136,7 +136,8 @@ def generateArticles(query, number):
                 if text is not None:
                     summary = SummerizeText(text)
                     if summary is not None:
-                        textList.append({'summary': summary, 'url': website})
+                        summarydone = removeRedundancy(summary)
+                        textList.append({'summary': summarydone, 'url': website})
             except TypeError:
                 print("Skipped:" + website)
                 continue
@@ -144,6 +145,36 @@ def generateArticles(query, number):
     return textList[:number]
 
 
+def findall(inpstr, sub):
+    ptr = 0
+    indexlist = []
+    while ptr < len(inpstr)-1:
+        index = inpstr.find(sub, ptr, len(inpstr)-1)
+        if index == -1:
+            return indexlist
+        indexlist.append(index)
+        ptr = index+1
+    return indexlist
+
+
+def removeString(inpstr, index, remove):
+    newstr = inpstr[0:index]
+    newstr2 = inpstr[index+remove-1:]
+    return newstr+" "+newstr2
+
+
+def removeRedundancy(givenstr):
+    indexlist = findall(givenstr, "\n")
+    for ind in indexlist[::-1]:
+        givenstr = removeString(givenstr, ind, 2)
+    periodIndex = findall(givenstr, ".")
+
+    for i in range(len(periodIndex)-2):
+        if periodIndex[i+1]-periodIndex[i] == periodIndex[i+2]-periodIndex[i+1]:
+            if givenstr[periodIndex[i]] == givenstr[periodIndex[i+1]]:
+                givenstr = removeString(givenstr, periodIndex[i], periodIndex[i + 1] - periodIndex[i])
+    return givenstr
+
+
 if __name__ == '__main__':
     app.run(debug=True)
-
